@@ -1,6 +1,5 @@
 import static java.util.stream.Collectors.toList;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,31 +8,27 @@ public class DayThree {
 
     public int partOne(String wireOneMovements, String wireTwoMovements) {
         String[] wireOneSteps = wireOneMovements.split(",");
-        List<String> wireOneVistitedPositions = moveWire(wireOneSteps);
-
         String[] wireTwoSteps = wireTwoMovements.split(",");
-        List<String> wireTwoVistitedPositions = moveWire(wireTwoSteps);
 
+        List<String> wireOneVistitedPositions = moveWire(wireOneSteps);
+        List<String> wireTwoVistitedPositions = moveWire(wireTwoSteps);
         List<String> common = wireOneVistitedPositions.stream().filter(wireTwoVistitedPositions::contains).collect(toList());
+
         int closestToStart = Integer.MAX_VALUE;
         for (String endLocation : common) {
             int distanceValue = Math.abs(Integer.parseInt(endLocation.split(",")[0])) + Math.abs(Integer.parseInt(endLocation.split(",")[1]));
-            if (distanceValue < closestToStart) {
+            if (distanceValue < closestToStart)
                 closestToStart = distanceValue;
-            }
         }
-
         return closestToStart;
     }
 
     public int partTwo(String wireOneMovements, String wireTwoMovements) {
         String[] wireOneSteps = wireOneMovements.split(",");
-        List<String> wireOneVistitedPositions = moveWire(wireOneSteps);
-
         String[] wireTwoSteps = wireTwoMovements.split(",");
-        List<String> wireTwoVistitedPositions = moveWire(wireTwoSteps);
 
-        List<String> common = wireOneVistitedPositions.stream().filter(wireTwoVistitedPositions::contains).collect(toList());
+        List<String> common = moveWire(wireOneSteps).stream().filter(moveWire(wireTwoSteps)::contains).collect(toList());
+
         int stepsForWireOne = moveWirePartTwo(wireOneSteps, Integer.parseInt(common.get(0).split(",")[0]), Integer.parseInt(common.get(0).split(",")[1]));
         int stepsForWireTwo = moveWirePartTwo(wireTwoSteps, Integer.parseInt(common.get(0).split(",")[0]), Integer.parseInt(common.get(0).split(",")[1]));
         return stepsForWireOne + stepsForWireTwo;
@@ -43,41 +38,35 @@ public class DayThree {
         int wireXPosition = 0;
         int wireYPoisition = 0;
         int stepCount = 0;
-        for (String move : wireSteps) {
-            if (move.startsWith("R")) {
+        for (String move : wireSteps)
+            if (move.startsWith("R"))
                 for (int i = 0; i < Integer.parseInt(move.substring(1)); i++) {
                     ++wireYPoisition;
                     stepCount++;
-                    if(wireXPosition == endX && wireYPoisition == endY) {
+                    if(wireXPosition == endX && wireYPoisition == endY)
                         return stepCount;
-                    }
                 }
-            } else if (move.startsWith("L")) {
+            else if (move.startsWith("L"))
                 for (int i = 0; i < Integer.parseInt(move.substring(1)); i++) {
                     --wireYPoisition;
                     stepCount++;
-                    if(wireXPosition == endX && wireYPoisition == endY) {
+                    if(wireXPosition == endX && wireYPoisition == endY)
                         return stepCount;
-                    }
                 }
-            } else if (move.startsWith("U")) {
+            else if (move.startsWith("U"))
                 for (int i = 0; i < Integer.parseInt(move.substring(1)); i++) {
                     --wireXPosition;
                     stepCount++;
-                    if(wireXPosition == endX && wireYPoisition == endY) {
+                    if(wireXPosition == endX && wireYPoisition == endY)
                         return stepCount;
-                    }
                 }
-            } else if (move.startsWith("D")) {
+            else if (move.startsWith("D"))
                 for (int i = 0; i < Integer.parseInt(move.substring(1)); i++) {
                     ++wireXPosition;
                     stepCount++;
-                    if(wireXPosition == endX && wireYPoisition == endY) {
+                    if(wireXPosition == endX && wireYPoisition == endY)
                         return stepCount;
-                    }
                 }
-            }
-        }
         return -1;
     }
 
@@ -85,31 +74,25 @@ public class DayThree {
         int wireXPosition = 0;
         int wireYPoisition = 0;
         List<String> visitedPositions = new LinkedList<>();
-        for (String move : wireSteps) {
-            if (move.startsWith("R")) {
-                for (int i = 0; i < Integer.parseInt(move.substring(1)); i++) {
+        for (String move : wireSteps)
+            if (move.startsWith("R"))
+                for (int i = 0; i < Integer.parseInt(move.substring(1)); i++)
                     visitedPositions.add( wireXPosition + "," + ++wireYPoisition);
-                }
-            } else if (move.startsWith("L")) {
-                for (int i = 0; i < Integer.parseInt(move.substring(1)); i++) {
+            else if (move.startsWith("L"))
+                for (int i = 0; i < Integer.parseInt(move.substring(1)); i++)
                     visitedPositions.add( wireXPosition+ "," + --wireYPoisition);
-                }
-            } else if (move.startsWith("U")) {
-                for (int i = 0; i < Integer.parseInt(move.substring(1)); i++) {
+            else if (move.startsWith("U"))
+                for (int i = 0; i < Integer.parseInt(move.substring(1)); i++)
                     visitedPositions.add(--wireXPosition + "," + wireYPoisition);
-                }
-            } else if (move.startsWith("D")) {
-                for (int i = 0; i < Integer.parseInt(move.substring(1)); i++) {
+            else if (move.startsWith("D"))
+                for (int i = 0; i < Integer.parseInt(move.substring(1)); i++)
                     visitedPositions.add(++wireXPosition + "," +wireYPoisition);
-                }
-            }
-        }
         return visitedPositions.stream().distinct().collect(Collectors.toList());
     }
 
     public static void main(String[] args) {
         DayThree dayThree = new DayThree();
-        //System.out.printf("Part one: %d", dayThree.partOne(wireOneMoves, wireTwoMoves));
+        System.out.printf("Part one: %d", dayThree.partOne(wireOneMoves, wireTwoMoves));
         System.out.printf("Part two: %d", dayThree.partTwo(wireOneMoves, wireTwoMoves));
     }
 
